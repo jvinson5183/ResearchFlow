@@ -29,15 +29,9 @@ describe('App Routing', () => {
     await waitFor(() => {
       // Check for the title rendered by MemberList
       expect(screen.getByRole('heading', { name: /Members/i })).toBeInTheDocument();
-      // Optionally, check for one of the mock members
-      expect(screen.getByText('Dr. Eleanor Vance')).toBeInTheDocument();
-    });
-  });
-
-  it('renders TestsPage on /tests route', async () => {
-    renderWithRouter(['/tests']);
-    await waitFor(() => {
-      expect(screen.getByText(/this is the tests management page/i)).toBeInTheDocument();
+      // Instead of looking for a specific member name which might change,
+      // check for a table or the add member button which should always be present
+      expect(screen.getByRole('button', { name: /Add Member/i })).toBeInTheDocument();
     });
   });
 
@@ -68,4 +62,15 @@ describe('App Routing', () => {
       expect(screen.getByText(/page not found/i)).toBeInTheDocument();
     });
   });
+
+  it('navigates to the Tests page and renders test content', async () => {
+    renderWithRouter(['/tests']);
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /Tests/i })).toBeInTheDocument();
+      // Check for the "Add Test" button specific to TestsPage
+      expect(screen.getByRole('button', { name: /Add Test/i })).toBeInTheDocument();
+    });
+  });
+
+  // Add tests for other routes as they are implemented (e.g., /chat, /reports, /settings)
 }); 

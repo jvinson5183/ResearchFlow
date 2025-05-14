@@ -1,4 +1,4 @@
-import { webDarkTheme, Theme } from '@fluentui/react-components';
+import { webDarkTheme, type Theme } from '@fluentui/react-components';
 import {
   sandDark,
   sandDarkA,
@@ -6,69 +6,59 @@ import {
   orangeDarkA,
 } from '@radix-ui/colors';
 
-// Convert Radix colors to a format compatible with Fluent UI theme
-// This is a simplified example. You might need a more comprehensive mapping.
-const createRadixTheme = (): Theme => {
-  // Start with Fluent UI's webDarkTheme as a base
-  const baseTheme = webDarkTheme;
+// PRD: Radix Colors (Sand Dark as primary, Orange Dark as secondary)
+// Based on PRD Section 2.2.1 Design - Radix Colors Scale Usage
 
-  return {
-    ...baseTheme,
-    // Override specific color tokens with Radix colors
-    // See https://fluentui.microsoft.com/components/theme/theme-designer for available tokens
+const researchFlowRadixTheme: Partial<Theme> = {
+  // Backgrounds (PRD Steps 1-2: SandDark for general, OrangeDark for accents if any)
+  colorNeutralBackground1: sandDark.sand1,      // Main app background, nav panes, cards
+  colorNeutralBackground2: sandDark.sand2,      // Subtle backgrounds (e.g., striped tables, secondary panels)
+  
+  // Component Backgrounds (PRD Steps 3-5)
+  colorNeutralBackground3: sandDark.sand3,      // Normal state for UI components (e.g., menu items, station cards)
+  colorNeutralBackground4: sandDark.sand4,      // Hover state for UI components
+  colorNeutralBackground5: sandDark.sand5,      // Pressed or selected state for UI components
 
-    // Backgrounds
-    colorNeutralBackground1: sandDark.sand1, // App background
-    colorNeutralBackground2: sandDark.sand2, // Cards, larger surfaces
-    colorNeutralBackground3: sandDark.sand3, // Hovered surfaces
-    colorNeutralBackground4: sandDark.sand4, // Pressed surfaces
-    colorNeutralBackground5: sandDark.sand5,
-    colorNeutralBackground6: sandDark.sand6, // Subtle borders, dividers
+  // Borders (PRD Steps 6-8)
+  colorNeutralStroke1: sandDark.sand6,          // Subtle borders for non-interactive components (nav pane, cards, separators)
+  colorNeutralStroke2: sandDark.sand7,          // Borders for interactive components (buttons, inputs)
+  colorNeutralStrokeAccessible: sandDark.sand8, // Stronger borders and focus rings (maps to step 8)
 
-    colorSubtleBackground: sandDark.sand1,
-    colorTransparentBackground: 'transparent',
+  // Text (PRD Steps 11-12)
+  colorNeutralForeground1: sandDark.sand12,       // High-contrast text (primary content, headings)
+  colorNeutralForeground2: sandDark.sand11,       // Low-contrast text (secondary labels, timestamps)
+  colorNeutralForeground3: sandDark.sand9,        // Placeholder text, icons (mapping to a step that has enough contrast on sand1/sand2)
+  colorNeutralForegroundDisabled: sandDark.sand7, // Disabled text
 
-    // Text / Foreground
-    colorNeutralForeground1: sandDark.sand12, // Primary text
-    colorNeutralForeground2: sandDark.sand11, // Secondary text
-    colorNeutralForeground3: sandDark.sand10, // Tertiary / placeholder text
-    colorNeutralForegroundDisabled: sandDark.sand8,
+  // Brand colors (OrangeDark as secondary/accent - PRD Steps 9-10 for solid backgrounds/accents)
+  // These map to Fluent UI's "Brand" tokens
+  colorBrandBackground: orangeDark.orange9,                 // High-chroma backgrounds (headers, overlays, accent borders, indicators)
+  colorBrandBackgroundHover: orangeDark.orange10,           // Hover state for solid background components
+  colorBrandBackgroundPressed: orangeDark.orange8,          // Pressed state for brand components
+  colorBrandBackgroundSelected: orangeDark.orange10,        // Selected state for brand components
+  
+  colorCompoundBrandBackground: orangeDark.orange9,
+  colorCompoundBrandBackgroundHover: orangeDark.orange10,
+  colorCompoundBrandBackgroundPressed: orangeDark.orange8,
 
-    // Brand colors (using Orange Dark as primary)
-    colorBrandBackground: orangeDark.orange9,
-    colorBrandBackgroundHover: orangeDark.orange10,
-    colorBrandBackgroundPressed: orangeDark.orange8,
-    colorBrandBackgroundSelected: orangeDark.orange9,
-    colorBrandForeground1: orangeDark.orange11,
-    colorBrandForeground2: orangeDark.orange12, // on brand background
+  colorBrandForeground1: sandDark.sand12,                   // High-contrast text on brand background (using SandDark12 for max contrast)
+  colorBrandForeground2: orangeDark.orange4,                // Softer text/icon on brand background (e.g. for icons inside a brand button)
+  
+  colorBrandStroke1: orangeDark.orange7,
+  colorBrandStroke2: orangeDark.orange8,
 
-    // Stroke colors
-    colorNeutralStroke1: sandDark.sand6, // Dividers, borders
-    colorNeutralStroke2: sandDark.sand7,
-    colorNeutralStroke3: sandDark.sand8,
-    colorNeutralStrokeAccessible: sandDark.sand9, // Focus borders
-
-    // Alpha colors for translucent effects if needed
-    // colorNeutralBackground1Alpha: sandDarkA.sandA1, // Example
-    // colorBrandBackgroundAlpha: orangeDarkA.orangeA5, // Example
-
-    // You can continue mapping other tokens as needed
-    // e.g., scrollbar colors, shadow colors etc.
-    // colorScrollbarBackground: sandDark.sand3,
-    // colorScrollbarThumbBackground: sandDark.sand7,
-    // colorScrollbarThumbBackgroundHover: sandDark.sand8,
-    // colorScrollbarThumbBackgroundPressed: sandDark.sand9,
-
-    // Shadows (example, you may need to define these properly)
-    // shadow2: `0 0 2px ${sandDarkA.sandA3}, 0 4px 8px ${sandDarkA.sandA4}`,
-    // shadow4: `0 0 2px ${sandDarkA.sandA3}, 0 8px 16px ${sandDarkA.sandA5}`,
-    // ... and so on for shadow8, shadow16, shadow28, shadow64
-  };
+  // Focus outline - Use a distinct color, OrangeDark step 9 or 10 is good for accents.
+  colorStrokeFocus2: orangeDark.orange10, // Outer focus stroke
+  colorStrokeFocus1: sandDark.sand1,      // Inner focus stroke (for high contrast against orange10)
 };
 
-export const researchFlowTheme: Theme = createRadixTheme();
+// Create the theme by merging our overrides with a base dark theme
+export const researchFlowTheme: Theme = {
+  ...webDarkTheme, // Using webDarkTheme as a more neutral base than teamsDarkTheme
+  ...researchFlowRadixTheme,
+};
 
-// Example of how you might want to export individual color palettes if needed elsewhere
+// Export Radix palettes if needed directly elsewhere (as per previous structure)
 export const brandColors = {
   ...orangeDark,
   ...orangeDarkA,
