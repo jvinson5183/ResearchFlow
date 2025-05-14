@@ -1,11 +1,8 @@
 import React from 'react';
-import { Text } from '@fluentui/react-components';
+import { MemberList } from '../../features/members/components/MemberList';
 
 export const MembersPage: React.FC = () => {
   return (
-    <div>
-      <Text as="h2" block>Members</Text>
-      <p>This is the members management page.</p>
-    </div>
+    <MemberList />
   );
 }; 
