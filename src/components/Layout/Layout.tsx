@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles, shorthands } from '@griffel/react';
 import { researchFlowTheme } from '../../styles/theme'; // Import our custom theme
 import { Logo } from '../Logo/Logo';
+import { Navigation } from '../Navigation/Navigation'; // Import the Navigation component
 // import { Navigation } from '../Navigation/Navigation'; // Placeholder for Navigation component
 
 const useStyles = makeStyles({
@@ -78,7 +79,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </header>
       <nav className={classes.navigation}>
-        <p>Navigation Placeholder</p>
+        <Navigation /> {/* Use the Navigation component */}
       </nav>
       <main className={classes.mainContent}>
         {children}

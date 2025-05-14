@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { App } from './App';
+import App from './App';
 
-it('renders "Welcome to Your Fluent UI App"', () => {
+it('renders welcome message', () => {
   render(<App />);
-  const linkElement = screen.getByText(/Welcome to Your Fluent UI App/i);
-  expect(linkElement).toBeInTheDocument();
+  const welcomeElement = screen.getByText(/welcome to researchflow/i);
+  expect(welcomeElement).toBeInTheDocument();
 });

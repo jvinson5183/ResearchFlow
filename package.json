@@ -4,9 +4,9 @@
   "private": true,
   "dependencies": {
     "@fluentui/react": "^8.122.17",
-    "@fluentui/react-components": "^9.63.0",
+    "@fluentui/react-components": "^9.54.3",
     "@fluentui/react-icons": "^2.0.300",
-    "@fluentui/react-theme": "^9.1.24",
+    "@fluentui/react-theme": "^9.1.18",
     "@griffel/react": "^1.5.30",
     "@radix-ui/colors": "^3.0.0",
     "@testing-library/jest-dom": "^5.17.0",
@@ -44,6 +44,11 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "[/\\\\\\\\\\\\\\\\]node_modules[/\\\\\\\\\\\\\\\\](?!(@fluentui|@griffel)/).+\\\\.(js|jsx|mjs|cjs|ts|tsx)$"
     ]
   }
 }
