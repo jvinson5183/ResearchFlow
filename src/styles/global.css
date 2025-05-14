@@ -1,0 +1,57 @@
+/* Basic Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--colorNeutralBackground1); /* Using Fluent UI theme token */
+  color: var(--colorNeutralForeground1); /* Using Fluent UI theme token */
+}
+
+body {
+  line-height: 1.5;
+}
+
+/* Responsive images and media */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Remove default list styles */
+ul,
+ol {
+  list-style: none;
+}
+
+/* Basic link styling (can be overridden by Fluent UI components) */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Accessible focus outline (customize as needed) */
+:focus-visible {
+  outline: 2px solid var(--colorBrandStroke1, Highlight); /* Fallback to system highlight */
+  outline-offset: 2px;
+} 
