@@ -27,7 +27,10 @@ describe('App Routing', () => {
   it('renders MembersPage on /members route', async () => {
     renderWithRouter(['/members']);
     await waitFor(() => {
-      expect(screen.getByText(/this is the members management page/i)).toBeInTheDocument();
+      // Check for the title rendered by MemberList
+      expect(screen.getByRole('heading', { name: /Members/i })).toBeInTheDocument();
+      // Optionally, check for one of the mock members
+      expect(screen.getByText('Dr. Eleanor Vance')).toBeInTheDocument();
     });
   });
 
