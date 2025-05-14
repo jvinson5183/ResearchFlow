@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   TableBody,
   TableRow,
@@ -11,9 +11,10 @@ import {
 import { AddRegular } from '@fluentui/react-icons'; // Using a v9 icon
 import { Member } from '../types';
 import { MemberListItem } from './MemberListItem';
+import { AddMemberDialog } from './AddMemberDialog'; // Import the dialog
 
-// Mock data for now
-const mockMembers: Member[] = [
+// Initial mock data
+const initialMembers: Member[] = [
   {
     id: '1',
     name: 'Dr. Eleanor Vance',
@@ -35,13 +36,23 @@ const mockMembers: Member[] = [
 ];
 
 export const MemberList: React.FC = () => {
-  // TODO: Add state and functions for adding/editing/deleting members
+  const [members, setMembers] = useState<Member[]>(initialMembers);
+  const [isAddMemberDialogOpen, setIsAddMemberDialogOpen] = useState(false);
+
+  const handleAddMemberSubmit = (newMemberData: Omit<Member, 'id'>) => {
+    const newMember: Member = {
+      ...newMemberData,
+      id: Date.now().toString(), // Generate a simple unique ID
+    };
+    setMembers(prevMembers => [...prevMembers, newMember]);
+    setIsAddMemberDialogOpen(false); // Close dialog on submit
+  };
 
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <Title1 as="h1">Members</Title1>
-        <Button icon={<AddRegular />} appearance="primary">
+        <Button icon={<AddRegular />} appearance="primary" onClick={() => setIsAddMemberDialogOpen(true)}>
           Add Member
         </Button>
       </div>
@@ -55,11 +66,16 @@ export const MemberList: React.FC = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {mockMembers.map((member) => (
+          {members.map((member) => (
             <MemberListItem key={member.id} member={member} />
           ))}
         </TableBody>
       </Table>
+      <AddMemberDialog
+        open={isAddMemberDialogOpen}
+        onOpenChange={setIsAddMemberDialogOpen}
+        onAddMember={handleAddMemberSubmit}
+      />
     </div>
   );
 }; 
