@@ -16,16 +16,28 @@ import {
 } from '@fluentui/react-components';
 import { Test, TestStatus } from '../types';
 
+// Create consistent spacing using multiples of 8px
+const spacing = {
+  xs: '8px',
+  s: '16px',
+  m: '24px',
+  l: '32px',
+  xl: '40px',
+};
+
 const useStyles = makeStyles({
   dialogBody: {
     display: 'flex',
     flexDirection: 'column',
-    ...shorthands.gap(tokens.spacingVerticalM),
+    ...shorthands.gap(spacing.m),
   },
   field: {
     display: 'flex',
     flexDirection: 'column',
-    ...shorthands.gap(tokens.spacingVerticalXS),
+    ...shorthands.gap(spacing.xs),
+  },
+  actions: {
+    paddingTop: spacing.s,
   },
 });
 
@@ -126,7 +138,7 @@ export const AddTestDialog: React.FC<AddTestDialogProps> = ({
             </div>
           </DialogContent>
 
-          <DialogActions>
+          <DialogActions className={classes.actions}>
             <Button appearance="secondary" onClick={() => onOpenChange(false)}>Cancel</Button>
             <Button appearance="primary" onClick={handleSubmit}>
               {isEditMode ? 'Save Changes' : 'Add Test'}

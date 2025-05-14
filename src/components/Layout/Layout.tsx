@@ -5,6 +5,15 @@ import { Logo } from '../Logo/Logo';
 import { Navigation } from '../Navigation/Navigation'; // Import the Navigation component
 // import { Navigation } from '../Navigation/Navigation'; // Placeholder for Navigation component
 
+// Create consistent spacing using multiples of 8px
+const spacing = {
+  xs: '8px',
+  s: '16px',
+  m: '24px',
+  l: '32px',
+  xl: '40px',
+};
+
 const useStyles = makeStyles({
   root: {
     display: 'grid',
@@ -25,7 +34,8 @@ const useStyles = makeStyles({
     gridRow: '1',
     display: 'flex',
     alignItems: 'center',
-    ...shorthands.padding(researchFlowTheme.spacingHorizontalM, researchFlowTheme.spacingHorizontalL),
+    height: '80px', // Increase height for larger logo
+    ...shorthands.padding(spacing.s), // Consistent 16px padding on all sides
     backgroundColor: researchFlowTheme.colorNeutralBackground2,
     ...shorthands.borderBottom(researchFlowTheme.strokeWidthThin, 'solid', researchFlowTheme.colorNeutralStroke1),
     zIndex: '10',
@@ -36,6 +46,7 @@ const useStyles = makeStyles({
   navigation: {
     gridColumn: '1',
     gridRow: '2',
+    width: '200px', // Match the width in Navigation component
     backgroundColor: researchFlowTheme.colorNeutralBackground2,
     ...shorthands.padding(researchFlowTheme.spacingVerticalM, researchFlowTheme.spacingHorizontalM),
     ...shorthands.borderRight(researchFlowTheme.strokeWidthThin, 'solid', researchFlowTheme.colorNeutralStroke1),
@@ -43,6 +54,7 @@ const useStyles = makeStyles({
     '@media (max-width: 768px)': {
       gridColumn: '1 / -1',
       gridRow: '2',
+      width: '100%',
       ...shorthands.borderRight('0px'),
       ...shorthands.borderBottom(researchFlowTheme.strokeWidthThin, 'solid', researchFlowTheme.colorNeutralStroke1),
       overflowY: 'unset',
@@ -60,7 +72,11 @@ const useStyles = makeStyles({
     },
   },
   logoContainer: {
-    // Styles for the logo container if needed
+    width: '200px', // Same width as sidebar
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingLeft: '0', // Remove any additional left padding
   }
 });
 

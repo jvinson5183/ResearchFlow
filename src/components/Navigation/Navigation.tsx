@@ -5,7 +5,8 @@ import {
   shorthands,
   tokens,
   Button,
-  Tooltip
+  Tooltip,
+  mergeClasses
 } from '@fluentui/react-components';
 import {
   HomeRegular,
@@ -14,6 +15,7 @@ import {
   ChatRegular,
   DocumentRegular, // For Reports
   SettingsRegular,
+  LocationRegular,
 } from '@fluentui/react-icons';
 
 const useStyles = makeStyles({
@@ -31,6 +33,12 @@ const useStyles = makeStyles({
   },
   link: {
     textDecorationLine: 'none',
+  },
+  tooltip: {
+    backgroundColor: '#000000',
+    color: '#ffffff',
+    ...shorthands.padding('4px', '8px'),
+    ...shorthands.borderRadius('4px'),
   }
 });
 
@@ -38,6 +46,7 @@ const navItems = [
   { label: 'Dashboard', icon: <HomeRegular />, key: 'dashboard', path: '/dashboard' },
   { label: 'Members', icon: <PeopleRegular />, key: 'members', path: '/members' },
   { label: 'Tests', icon: <BeakerRegular />, key: 'tests', path: '/tests' },
+  { label: 'Stations', icon: <LocationRegular />, key: 'stations', path: '/stations' },
   { label: 'Chat', icon: <ChatRegular />, key: 'chat', path: '/chat' },
   { label: 'Reports', icon: <DocumentRegular />, key: 'reports', path: '/reports' },
   { label: 'Settings', icon: <SettingsRegular />, key: 'settings', path: '/settings' },
@@ -53,7 +62,12 @@ export const Navigation: React.FC = () => {
         const isSelected = location.pathname.startsWith(item.path);
         return (
           <Link to={item.path} key={item.key} className={classes.link}>
-            <Tooltip content={item.label} relationship="label">
+            <Tooltip 
+              content={item.label} 
+              relationship="label" 
+              positioning={{ align: 'end' }}
+              appearance="inverted"
+            >
               <Button
                 appearance={isSelected ? 'primary' : 'subtle'}
                 icon={item.icon}

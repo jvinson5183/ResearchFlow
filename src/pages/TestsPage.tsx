@@ -19,12 +19,24 @@ import { AddTestDialog } from '../features/tests/components/AddTestDialog';
 import { Test, TestStatus } from '../features/tests/types';
 import update from 'immutability-helper';
 
+// Create consistent spacing using multiples of 8px
+const spacing = {
+  xs: '8px',
+  s: '16px',
+  m: '24px',
+  l: '32px',
+  xl: '40px',
+};
+
 const useStyles = makeStyles({
   pageHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    ...shorthands.margin(0, 0, tokens.spacingVerticalL, 0),
+    ...shorthands.margin(0, 0, spacing.l, 0),
+  },
+  actions: {
+    paddingTop: spacing.s,
   },
 });
 
@@ -171,7 +183,7 @@ export const TestsPage: React.FC = () => {
             <DialogContent>
               Are you sure you want to delete this test? This action cannot be undone.
             </DialogContent>
-            <DialogActions>
+            <DialogActions className={classes.actions}>
               <Button appearance="secondary" onClick={() => setIsDeleteDialogOpen(false)}>
                 Cancel
               </Button>

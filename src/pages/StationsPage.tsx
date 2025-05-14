@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Title1,
   Button,
@@ -8,25 +8,66 @@ import {
   DialogOpenChangeEvent,
   DialogOpenChangeData,
 } from '@fluentui/react-components';
-import { AddRegular } from '@fluentui/react-icons';
+import { AddRegular, ArrowSyncRegular } from '@fluentui/react-icons';
 import { Station } from '../features/stations/types';
 import { StationCard } from '../features/stations/components/StationCard';
 import { StationDialog } from '../features/stations/components/StationDialog';
 import { DeleteConfirmationDialog } from '../features/stations/components/DeleteConfirmationDialog';
+import { TestAssignmentDialog } from '../features/stations/components/TestAssignmentDialog';
+import { AutoAdjustDialog } from '../features/stations/components/AutoAdjustDialog';
+import { Test, TestStatus } from '../features/tests/types';
+
+// Create consistent spacing using multiples of 8px
+const spacing = {
+  xs: '8px',
+  s: '16px',
+  m: '24px',
+  l: '32px',
+  xl: '40px',
+};
 
 const useStyles = makeStyles({
   pageHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    ...shorthands.margin(0, 0, tokens.spacingVerticalL, 0),
+    ...shorthands.margin(0, 0, spacing.l, 0),
+  },
+  headerButtons: {
+    display: 'flex',
+    gap: spacing.s,
   },
   stationsGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gap: tokens.spacingHorizontalL,
+    gap: spacing.l,
   }
 });
+
+// Mock tests data for demonstration
+const mockTests: Test[] = [
+  {
+    id: 't1',
+    name: 'Cognitive Assessment A',
+    description: 'Standardized cognitive function test, version A.',
+    estimatedDuration: 30,
+    status: TestStatus.Pending,
+  },
+  {
+    id: 't2',
+    name: 'Motor Skills Test B',
+    description: 'Assesses fine and gross motor skills.',
+    estimatedDuration: 45,
+    status: TestStatus.InProgress,
+  },
+  {
+    id: 't3',
+    name: 'User Feedback Survey',
+    description: 'Gathers user feedback post-testing.',
+    estimatedDuration: 15,
+    status: TestStatus.Completed,
+  },
+];
 
 // Initial sample data
 const initialStations: Station[] = [
@@ -57,8 +98,11 @@ export const StationsPage: React.FC = () => {
   const [stations, setStations] = useState<Station[]>(initialStations);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [testAssignmentDialogOpen, setTestAssignmentDialogOpen] = useState(false);
+  const [autoAdjustDialogOpen, setAutoAdjustDialogOpen] = useState(false);
   const [selectedStation, setSelectedStation] = useState<Station | undefined>();
   const [stationToDelete, setStationToDelete] = useState<Station | undefined>();
+  const [tests, setTests] = useState<Test[]>(mockTests);
 
   const handleAddStation = () => {
     setSelectedStation(undefined);
@@ -111,6 +155,28 @@ export const StationsPage: React.FC = () => {
     setDialogOpen(false);
   };
 
+  const handleAssignTests = (station: Station) => {
+    setSelectedStation(station);
+    setTestAssignmentDialogOpen(true);
+  };
+
+  const handleTestAssignment = (stationId: string, testIds: string[]) => {
+    // Update station with assigned tests
+    setStations(prevStations => 
+      prevStations.map(station => {
+        if (station.id === stationId) {
+          return {
+            ...station,
+            tests: testIds,
+            test_count: testIds.length,
+            updated_at: new Date().toISOString()
+          };
+        }
+        return station;
+      })
+    );
+  };
+
   const handleDialogOpenChange = (_: DialogOpenChangeEvent, data: DialogOpenChangeData) => {
     setDialogOpen(data.open);
   };
@@ -119,17 +185,49 @@ export const StationsPage: React.FC = () => {
     setDeleteDialogOpen(data.open);
   };
 
+  const handleTestAssignmentDialogOpenChange = (_: DialogOpenChangeEvent, data: DialogOpenChangeData) => {
+    setTestAssignmentDialogOpen(data.open);
+  };
+
+  const handleOpenAutoAdjustDialog = () => {
+    setAutoAdjustDialogOpen(true);
+  };
+
+  const handleApplySuggestions = (assignments: Record<string, string[]>) => {
+    // Update stations with the suggested test assignments
+    setStations(prevStations => 
+      prevStations.map(station => {
+        const assignedTests = assignments[station.id] || [];
+        return {
+          ...station,
+          tests: assignedTests,
+          test_count: assignedTests.length,
+          updated_at: new Date().toISOString()
+        };
+      })
+    );
+  };
+
   return (
     <div>
       <div className={classes.pageHeader}>
         <Title1>Stations</Title1>
-        <Button 
-          appearance="primary"
-          icon={<AddRegular />}
-          onClick={handleAddStation}
-        >
-          Add Station
-        </Button>
+        <div className={classes.headerButtons}>
+          <Button
+            appearance="subtle"
+            icon={<ArrowSyncRegular />}
+            onClick={handleOpenAutoAdjustDialog}
+          >
+            Auto-Adjust Tests
+          </Button>
+          <Button 
+            appearance="primary"
+            icon={<AddRegular />}
+            onClick={handleAddStation}
+          >
+            Add Station
+          </Button>
+        </div>
       </div>
 
       <div className={classes.stationsGrid}>
@@ -139,6 +237,8 @@ export const StationsPage: React.FC = () => {
             station={station}
             onEdit={handleEditStation}
             onDelete={handleDeleteStation}
+            onAssignTests={handleAssignTests}
+            tests={tests}
           />
         ))}
       </div>
@@ -158,6 +258,24 @@ export const StationsPage: React.FC = () => {
           onConfirm={handleConfirmDelete}
         />
       )}
+
+      {selectedStation && (
+        <TestAssignmentDialog
+          open={testAssignmentDialogOpen}
+          station={selectedStation}
+          allTests={tests}
+          onOpenChange={handleTestAssignmentDialogOpenChange}
+          onAssignTests={handleTestAssignment}
+        />
+      )}
+
+      <AutoAdjustDialog
+        open={autoAdjustDialogOpen}
+        onOpenChange={setAutoAdjustDialogOpen}
+        stations={stations}
+        tests={tests}
+        onApplySuggestions={handleApplySuggestions}
+      />
     </div>
   );
 }; 

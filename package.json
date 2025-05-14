@@ -9,10 +9,6 @@
     "@fluentui/react-theme": "^9.1.18",
     "@griffel/react": "^1.5.30",
     "@radix-ui/colors": "^3.0.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^12.1.5",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^28.1.8",
     "@types/node": "^14.18.63",
     "@types/react": "^17.0.85",
     "@types/react-dom": "^17.0.26",
@@ -57,7 +53,19 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.27.1",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
     "@craco/craco": "^7.1.0",
-    "@types/immutability-helper": "^2.0.15"
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/immutability-helper": "^2.0.15",
+    "@types/jest": "^29.5.14",
+    "babel-jest": "^29.7.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.5.1",
+    "ts-jest": "^29.3.3"
   }
 }

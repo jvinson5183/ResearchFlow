@@ -14,6 +14,15 @@ import {
 } from '@fluentui/react-components';
 import { Member } from '../types';
 
+// Create consistent spacing using multiples of 8px
+const spacing = {
+  xs: '8px',
+  s: '16px',
+  m: '24px',
+  l: '32px',
+  xl: '40px',
+};
+
 interface AddMemberDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -24,13 +33,16 @@ const useStyles = makeStyles({
   dialogBody: {
     display: 'flex',
     flexDirection: 'column',
-    ...shorthands.gap('15px'),
-    paddingBottom: '15px',
+    ...shorthands.gap(spacing.s),
+    paddingBottom: spacing.s,
   },
   field: {
     display: 'flex',
     flexDirection: 'column',
-    ...shorthands.gap('2px'),
+    ...shorthands.gap(spacing.xs),
+  },
+  actions: {
+    paddingTop: spacing.s,
   },
 });
 
@@ -102,7 +114,7 @@ export const AddMemberDialog: React.FC<AddMemberDialogProps> = ({ open, onOpenCh
               />
             </div>
           </DialogContent>
-          <DialogActions>
+          <DialogActions className={styles.actions}>
             <Button appearance="secondary" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>

@@ -9,6 +9,7 @@ import { TestsPage } from './pages/TestsPage';
 import { ChatPage } from './pages/ChatPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { StationsPage } from './pages/StationsPage';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -22,6 +23,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/members" element={<MembersPage />} />
             <Route path="/tests" element={<TestsPage />} />
+            <Route path="/stations" element={<StationsPage />} />
             <Route path="/chat" element={<ChatPage />} />
             <Route path="/reports" element={<ReportsPage />} />
             <Route path="/settings" element={<SettingsPage />} />

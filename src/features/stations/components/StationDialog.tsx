@@ -18,16 +18,28 @@ import {
 } from '@fluentui/react-components';
 import { Station } from '../types';
 
+// Create consistent spacing using multiples of 8px
+const spacing = {
+  xs: '8px',
+  s: '16px',
+  m: '24px',
+  l: '32px',
+  xl: '40px',
+};
+
 const useStyles = makeStyles({
   form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: tokens.spacingVerticalM,
+    gap: spacing.m,
   },
   error: {
     color: tokens.colorPaletteRedForeground1,
     fontSize: tokens.fontSizeBase200,
-    marginTop: tokens.spacingVerticalXS,
+    marginTop: spacing.xs,
+  },
+  actions: {
+    paddingTop: spacing.s,
   },
 });
 
@@ -184,7 +196,7 @@ export const StationDialog: React.FC<StationDialogProps> = ({
             )}
           </div>
         </DialogContent>
-        <DialogActions>
+        <DialogActions className={styles.actions}>
           <Button appearance="secondary" onClick={handleCancel}>
             Cancel
           </Button>

@@ -14,15 +14,27 @@ import {
 } from '@fluentui/react-components';
 import { Station } from '../types';
 
+// Create consistent spacing using multiples of 8px
+const spacing = {
+  xs: '8px',
+  s: '16px',
+  m: '24px',
+  l: '32px',
+  xl: '40px',
+};
+
 const useStyles = makeStyles({
   content: {
     display: 'flex',
     flexDirection: 'column',
-    gap: tokens.spacingVerticalM,
+    gap: spacing.m,
   },
   warning: {
     color: tokens.colorPaletteRedForeground1,
     fontWeight: tokens.fontWeightSemibold,
+  },
+  actions: {
+    paddingTop: spacing.s,
   },
 });
 
@@ -70,7 +82,7 @@ export const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> =
             )}
           </div>
         </DialogContent>
-        <DialogActions>
+        <DialogActions className={styles.actions}>
           <Button appearance="secondary" onClick={handleCancel}>
             Cancel
           </Button>
