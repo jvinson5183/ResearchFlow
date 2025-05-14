@@ -69,6 +69,7 @@ export const MemberList: React.FC = () => {
           {members.map((member) => (
             <MemberListItem key={member.id} member={member} />
           ))}
+          {/* <MemberListItem key="test-1" member={{ id: 'test-id', name: 'Test Name', role: 'Test Role', email: 'test@example.com' }} /> */}
         </TableBody>
       </Table>
       <AddMemberDialog
