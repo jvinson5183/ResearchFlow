@@ -2,12 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom'; // Changed from react-dom/client
 // import './index.css'; // Default CRA global styles, replaced by global.css
 import './styles/global.css'; // Import custom global styles
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

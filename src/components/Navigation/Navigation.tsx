@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   makeStyles,
   shorthands,
@@ -28,42 +29,42 @@ const useStyles = makeStyles({
     width: '100%',
     justifyContent: 'flex-start', // Align icon and text to the start
   },
+  link: {
+    textDecorationLine: 'none',
+  }
 });
 
 const navItems = [
-  { label: 'Dashboard', icon: <HomeRegular />, key: 'dashboard' },
-  { label: 'Members', icon: <PeopleRegular />, key: 'members' },
-  { label: 'Tests', icon: <BeakerRegular />, key: 'tests' },
-  { label: 'Chat', icon: <ChatRegular />, key: 'chat' },
-  { label: 'Reports', icon: <DocumentRegular />, key: 'reports' },
-  { label: 'Settings', icon: <SettingsRegular />, key: 'settings' },
+  { label: 'Dashboard', icon: <HomeRegular />, key: 'dashboard', path: '/dashboard' },
+  { label: 'Members', icon: <PeopleRegular />, key: 'members', path: '/members' },
+  { label: 'Tests', icon: <BeakerRegular />, key: 'tests', path: '/tests' },
+  { label: 'Chat', icon: <ChatRegular />, key: 'chat', path: '/chat' },
+  { label: 'Reports', icon: <DocumentRegular />, key: 'reports', path: '/reports' },
+  { label: 'Settings', icon: <SettingsRegular />, key: 'settings', path: '/settings' },
 ];
 
 export const Navigation: React.FC = () => {
   const classes = useStyles();
-  const [selectedValue, setSelectedValue] = React.useState('dashboard');
-
-  // In a real app, this would likely trigger routing changes
-  const onNavItemClick = (itemKey: string) => {
-    setSelectedValue(itemKey);
-    console.log(`Navigating to ${itemKey}`);
-    // TODO: Implement actual navigation logic (e.g., react-router)
-  };
+  const location = useLocation();
 
   return (
     <nav className={classes.root}>
-      {navItems.map((item) => (
-        <Tooltip content={item.label} relationship="label" key={item.key}>
-          <Button
-            appearance={selectedValue === item.key ? 'primary' : 'subtle'}
-            icon={item.icon}
-            className={classes.navButton}
-            onClick={() => onNavItemClick(item.key)}
-          >
-            {item.label} {/* Show label, PDR implies collapsible to icons only later */}
-          </Button>
-        </Tooltip>
-      ))}
+      {navItems.map((item) => {
+        const isSelected = location.pathname.startsWith(item.path);
+        return (
+          <Link to={item.path} key={item.key} className={classes.link}>
+            <Tooltip content={item.label} relationship="label">
+              <Button
+                appearance={isSelected ? 'primary' : 'subtle'}
+                icon={item.icon}
+                className={classes.navButton}
+              >
+                {item.label}
+              </Button>
+            </Tooltip>
+          </Link>
+        );
+      })}
     </nav>
   );
 }; 

@@ -1,6 +1,7 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { FluentProvider } from '@fluentui/react-components';
+import { MemoryRouter } from 'react-router-dom';
 import { researchFlowTheme } from '../../styles/theme';
 import { Navigation } from './Navigation';
 
@@ -8,38 +9,37 @@ import { Navigation } from './Navigation';
 // or wrap with the actual FluentProvider and theme if complex tokens are used.
 
 describe('Navigation Component', () => {
-  const renderWithTheme = (ui: React.ReactElement) => {
+  const renderWithThemeAndRouter = (ui: React.ReactElement, initialEntries: string[] = ['/']) => {
     return render(
-      <FluentProvider theme={researchFlowTheme}>
-        {ui}
-      </FluentProvider>
+      <MemoryRouter initialEntries={initialEntries}>
+        <FluentProvider theme={researchFlowTheme}>
+          {ui}
+        </FluentProvider>
+      </MemoryRouter>
     );
   };
 
-  it('renders all navigation items', () => {
-    renderWithTheme(<Navigation />);
+  it('renders all navigation items as links', () => {
+    renderWithThemeAndRouter(<Navigation />);
 
-    // Check for each navigation item by its label
-    expect(screen.getByRole('button', { name: /dashboard/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /members/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /tests/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /chat/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /reports/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /settings/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /members/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /tests/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /chat/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /reports/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /settings/i })).toBeInTheDocument();
   });
 
-  it('highlights Dashboard as the default selected item', () => {
-    renderWithTheme(<Navigation />);
-    // The selected item should have primary appearance. We can check this by a unique attribute or style if possible,
-    // or by checking its properties if Fluent UI Button exposes them. 
-    // For now, we check if it's rendered. A more specific test for 'primary' appearance might be complex
-    // without deeper inspection methods for Fluent UI's styling.
-    const dashboardButton = screen.getByRole('button', { name: /dashboard/i });
-    expect(dashboardButton).toBeInTheDocument();
-    // This is a naive check. In a real scenario, you might need to inspect classes or specific aria attributes set by Fluent UI for primary appearance.
-    // For example, if primary buttons get a specific class or data-attribute from Fluent UI we can use that.
-    // As a simple check, we know it's the default, so this test primarily ensures it exists.
+  it('renders the button within the active link', () => {
+    renderWithThemeAndRouter(<Navigation />, ['/members']); 
+    const membersLink = screen.getByRole('link', { name: /members/i });
+    expect(membersLink).toBeInTheDocument();
+
+    const membersButton = within(membersLink).getByRole('button');
+    expect(membersButton).toBeInTheDocument();
   });
 
   // Add more tests here, e.g., for click behavior (though this involves routing later)
-}); 
+});
+
+// Custom within helper removed 
