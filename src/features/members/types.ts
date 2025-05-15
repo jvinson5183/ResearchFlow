@@ -3,5 +3,5 @@ export interface Member {
   name: string;
   role: string;
   email: string;
-  assignedStationId?: string | number | null; // Optional, for future use
+  assignedStationId?: string; // ID of the station this member is assigned to
 } 

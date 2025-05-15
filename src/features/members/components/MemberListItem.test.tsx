@@ -13,6 +13,12 @@ describe('MemberListItem Component', () => {
     email: 'test@example.com',
   };
 
+  const mockHandlers = {
+    onEdit: jest.fn(),
+    onDelete: jest.fn(),
+    onAssign: jest.fn(),
+  };
+
   const renderWithTheme = (ui: React.ReactElement) => {
     return render(
       <FluentProvider theme={researchFlowTheme}>
@@ -24,11 +30,20 @@ describe('MemberListItem Component', () => {
   };
 
   it('renders member details correctly', () => {
-    renderWithTheme(<MemberListItem member={mockMember} />);
+    renderWithTheme(
+      <MemberListItem 
+        member={mockMember} 
+        stationName="Unassigned" 
+        onEdit={mockHandlers.onEdit} 
+        onDelete={mockHandlers.onDelete} 
+        onAssign={mockHandlers.onAssign} 
+      />
+    );
 
     const row = screen.getByRole('row');
     expect(within(row).getByText('Test User')).toBeInTheDocument();
     expect(within(row).getByText('Tester')).toBeInTheDocument();
     expect(within(row).getByText('test@example.com')).toBeInTheDocument();
+    expect(within(row).getByText('Unassigned')).toBeInTheDocument();
   });
 }); 

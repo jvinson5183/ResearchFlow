@@ -1,19 +1,27 @@
 import React from 'react';
 import { render, screen, fireEvent } from '../../../../test-utils';
 import { StationCard } from '../StationCard';
-import { Station } from '../../types';
+import { Station, StationStatus } from '../../types';
 import { Member } from '../../../members/types';
 import { Test, TestStatus } from '../../../tests/types';
+import { ExtendedStation } from '../../../../contexts/AppDataContext';
+
+// Mock react-router-dom useNavigate
+jest.mock('react-router-dom', () => ({
+  useNavigate: () => jest.fn()
+}));
 
 // Create a simplified mock component for direct testing
 const MockStationCard = ({
   station,
   onEdit,
   onDelete,
+  onAssignTests,
 }: {
-  station: Station;
-  onEdit: (station: Station) => void;
-  onDelete: (station: Station) => void;
+  station: ExtendedStation;
+  onEdit: (station: ExtendedStation) => void;
+  onDelete: (station: ExtendedStation) => void;
+  onAssignTests: (station: ExtendedStation) => void;
 }) => {
   const handleEdit = () => {
     onEdit(station);
@@ -21,6 +29,10 @@ const MockStationCard = ({
 
   const handleDelete = () => {
     onDelete(station);
+  };
+
+  const handleAssignTests = () => {
+    onAssignTests(station);
   };
 
   return (
@@ -41,8 +53,14 @@ const MockStationCard = ({
       <div data-testid="test-count">
         {station.test_count} {station.test_count === 1 ? 'Test' : 'Tests'}
       </div>
+      {station.unread_messages && station.unread_messages > 0 && (
+        <div data-testid="unread-messages">
+          Messages <span data-testid="unread-count">{station.unread_messages}</span>
+        </div>
+      )}
       <button onClick={handleEdit} aria-label={`Edit ${station.name}`}>Edit</button>
       <button onClick={handleDelete} aria-label={`Delete ${station.name}`}>Delete</button>
+      <button onClick={handleAssignTests} aria-label={`Assign Tests to ${station.name}`}>Assign Tests</button>
     </div>
   );
 };
@@ -53,21 +71,30 @@ jest.mock('../StationCard', () => ({
 }));
 
 describe('StationCard', () => {
-  const mockStation: Station = {
+  const mockStation: ExtendedStation = {
     id: 'test-station-1',
     name: 'Test Station',
     terminal_id: undefined,
     pin: undefined,
     member_count: 0,
     test_count: 0,
+    status: StationStatus.Idle,
+    unread_messages: 0,
+    members: [],
+    tests: [],
     created_at: '2023-01-01',
     updated_at: '2023-01-01'
   };
 
-  const mockLockedStation: Station = {
+  const mockLockedStation: ExtendedStation = {
     ...mockStation,
     terminal_id: 'terminal-123',
     pin: '1234'
+  };
+
+  const mockStationWithUnreadMessages: ExtendedStation = {
+    ...mockStation,
+    unread_messages: 5
   };
 
   const mockMembers: Member[] = [
@@ -81,7 +108,7 @@ describe('StationCard', () => {
     { id: '3', name: 'Test 3', estimatedDuration: 60, status: TestStatus.Pending }
   ];
 
-  const mockStationWithData: Station = {
+  const mockStationWithData: ExtendedStation = {
     ...mockStation,
     member_count: 2,
     test_count: 3
@@ -91,6 +118,8 @@ describe('StationCard', () => {
     station: mockStation,
     onEdit: jest.fn(),
     onDelete: jest.fn(),
+    onAssignTests: jest.fn(),
+    tests: [] as Test[],
   };
 
   beforeEach(() => {
@@ -140,6 +169,17 @@ describe('StationCard', () => {
     expect(screen.getByTestId('test-count')).toHaveTextContent('1 Test');
   });
 
+  it('shows unread messages count when station has unread messages', () => {
+    render(<MockStationCard {...defaultProps} station={mockStationWithUnreadMessages} />);
+    expect(screen.getByTestId('unread-messages')).toBeInTheDocument();
+    expect(screen.getByTestId('unread-count')).toHaveTextContent('5');
+  });
+
+  it('does not show unread messages count when there are no unread messages', () => {
+    render(<MockStationCard {...defaultProps} />);
+    expect(screen.queryByTestId('unread-messages')).not.toBeInTheDocument();
+  });
+
   it('calls onEdit when edit button is clicked', () => {
     render(<MockStationCard {...defaultProps} />);
     fireEvent.click(screen.getByLabelText('Edit Test Station'));
@@ -150,5 +190,11 @@ describe('StationCard', () => {
     render(<MockStationCard {...defaultProps} />);
     fireEvent.click(screen.getByLabelText('Delete Test Station'));
     expect(defaultProps.onDelete).toHaveBeenCalledWith(mockStation);
+  });
+
+  it('calls onAssignTests when assign tests button is clicked', () => {
+    render(<MockStationCard {...defaultProps} />);
+    fireEvent.click(screen.getByLabelText('Assign Tests to Test Station'));
+    expect(defaultProps.onAssignTests).toHaveBeenCalledWith(mockStation);
   });
 }); 
