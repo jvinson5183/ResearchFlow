@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Title1,
   Button,
@@ -15,7 +15,7 @@ import { StationDialog } from '../features/stations/components/StationDialog';
 import { DeleteConfirmationDialog } from '../features/stations/components/DeleteConfirmationDialog';
 import { TestAssignmentDialog } from '../features/stations/components/TestAssignmentDialog';
 import { AutoAdjustDialog } from '../features/stations/components/AutoAdjustDialog';
-import { Test, TestStatus } from '../features/tests/types';
+import { useAppData, ExtendedStation } from '../contexts/AppDataContext';
 
 // Create consistent spacing using multiples of 8px
 const spacing = {
@@ -44,77 +44,28 @@ const useStyles = makeStyles({
   }
 });
 
-// Mock tests data for demonstration
-const mockTests: Test[] = [
-  {
-    id: 't1',
-    name: 'Cognitive Assessment A',
-    description: 'Standardized cognitive function test, version A.',
-    estimatedDuration: 30,
-    status: TestStatus.Pending,
-  },
-  {
-    id: 't2',
-    name: 'Motor Skills Test B',
-    description: 'Assesses fine and gross motor skills.',
-    estimatedDuration: 45,
-    status: TestStatus.InProgress,
-  },
-  {
-    id: 't3',
-    name: 'User Feedback Survey',
-    description: 'Gathers user feedback post-testing.',
-    estimatedDuration: 15,
-    status: TestStatus.Completed,
-  },
-];
-
-// Initial sample data
-const initialStations: Station[] = [
-  {
-    id: 's1',
-    name: 'Station Alpha',
-    members: [],
-    tests: [],
-    member_count: 0,
-    test_count: 0,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  },
-  {
-    id: 's2',
-    name: 'Station Beta',
-    members: [],
-    tests: [],
-    member_count: 0,
-    test_count: 0,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }
-];
-
 export const StationsPage: React.FC = () => {
   const classes = useStyles();
-  const [stations, setStations] = useState<Station[]>(initialStations);
+  const { stations, setStations, tests, setTests } = useAppData();
+  
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [testAssignmentDialogOpen, setTestAssignmentDialogOpen] = useState(false);
   const [autoAdjustDialogOpen, setAutoAdjustDialogOpen] = useState(false);
-  const [selectedStation, setSelectedStation] = useState<Station | undefined>();
-  const [stationToDelete, setStationToDelete] = useState<Station | undefined>();
-  const [tests, setTests] = useState<Test[]>(mockTests);
+  const [selectedStation, setSelectedStation] = useState<ExtendedStation | undefined>();
+  const [stationToDelete, setStationToDelete] = useState<ExtendedStation | undefined>();
 
   const handleAddStation = () => {
     setSelectedStation(undefined);
     setDialogOpen(true);
   };
 
-  const handleEditStation = (station: Station) => {
+  const handleEditStation = (station: ExtendedStation) => {
     setSelectedStation(station);
     setDialogOpen(true);
   };
 
-  const handleDeleteStation = (station: Station) => {
+  const handleDeleteStation = (station: ExtendedStation) => {
     setStationToDelete(station);
     setDeleteDialogOpen(true);
   };
@@ -138,7 +89,7 @@ export const StationsPage: React.FC = () => {
       ));
     } else {
       // Add new station
-      const newStation: Station = {
+      const newStation: ExtendedStation = {
         id: `s${Date.now()}`,
         name: stationData.name,
         terminal_id: stationData.terminal_id,
@@ -155,7 +106,7 @@ export const StationsPage: React.FC = () => {
     setDialogOpen(false);
   };
 
-  const handleAssignTests = (station: Station) => {
+  const handleAssignTests = (station: ExtendedStation) => {
     setSelectedStation(station);
     setTestAssignmentDialogOpen(true);
   };

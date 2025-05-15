@@ -12,24 +12,27 @@ import { SettingsPage } from './pages/SettingsPage';
 import { StationsPage } from './pages/StationsPage';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { AppDataProvider } from './contexts/AppDataContext';
 
 function App() {
   return (
     <FluentProvider theme={researchFlowTheme}>
       <DndProvider backend={HTML5Backend}>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/members" element={<MembersPage />} />
-            <Route path="/tests" element={<TestsPage />} />
-            <Route path="/stations" element={<StationsPage />} />
-            <Route path="/chat" element={<ChatPage />} />
-            <Route path="/reports" element={<ReportsPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="*" element={<div><p>Page Not Found</p></div>} />
-          </Routes>
-        </Layout>
+        <AppDataProvider>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/members" element={<MembersPage />} />
+              <Route path="/tests" element={<TestsPage />} />
+              <Route path="/stations" element={<StationsPage />} />
+              <Route path="/chat" element={<ChatPage />} />
+              <Route path="/reports" element={<ReportsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="*" element={<div><p>Page Not Found</p></div>} />
+            </Routes>
+          </Layout>
+        </AppDataProvider>
       </DndProvider>
     </FluentProvider>
   );
